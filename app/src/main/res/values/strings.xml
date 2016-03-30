@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">RmCard</string>
+    <string name="login">立刻登录</string>
+    <string name="sign_out">退出</string>
+    <string name="query">查 询</string>
+    <string name="log_in">登录</string>
+    <string name="loading">努力加载中···</string>
+    <string name="query_result">查询结果</string>
+    <string name="use">使 用</string>
+    <string name="back">返回</string>
+    <string name="scanning">扫码获取</string>
+    <string name="num">请输入编号</string>
+    <string name="phone">请输入电话号码</string>
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+</resources>
