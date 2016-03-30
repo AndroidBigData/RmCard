@@ -69,31 +69,30 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/query"
-        android:id="@+id/query"
-        android:layout_below="@+id/scanning"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
+        android:text="@string/scanning"
+        android:id="@+id/scanning"
         android:background="@drawable/login_select"
         android:textSize="18sp"
         android:textColor="@android:color/white"
+        android:layout_marginTop="50dp"
+        android:layout_below="@+id/query"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"/>
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/scanning"
-        android:id="@+id/scanning"
-        android:layout_below="@+id/phone"
-        android:layout_marginTop="50dp"
-        android:layout_centerHorizontal="true"
+        android:text="@string/query"
+        android:id="@+id/query"
         android:background="@drawable/login_select"
         android:textSize="18sp"
         android:textColor="@android:color/white"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"/>
+        android:layout_below="@+id/phone"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"/>
 
-    <include layout="@layout/progress"/>
+    <include layout="@layout/progress"
+        android:id="@+id/include" />
 
 </RelativeLayout>
