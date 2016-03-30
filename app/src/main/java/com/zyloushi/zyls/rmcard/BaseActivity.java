@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 public class BaseActivity extends Activity {
     /**
      * 关闭Activity的广播，放在自定义的基类中，让其他的Activity继承这个Activity就行
-     * 测试提交
      */
     protected BroadcastReceiver finishAppReceiver = new BroadcastReceiver() {
         @Override
