@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">RmCard</string>
+    <string name="app_name">返金卡</string>
     <string name="login">立刻登录</string>
     <string name="sign_out">退出</string>
     <string name="query">查 询</string>
