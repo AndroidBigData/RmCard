@@ -3,6 +3,8 @@ package com.zyloushi.zyls.rmcard;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Bundle;
@@ -20,7 +22,12 @@ import com.zyloushi.zyls.until.MyPreference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
@@ -32,10 +39,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private String EXITAPP="再按一次退出程序";
     private long exitTime = 0;
     private final static int SCANNIN_GREQUEST_CODE = 1;
+    private String url="http://www.zyloushi.com/extended/recard.php?m=Index&a=CheckCard";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+        x.Ext.init(getApplication());
+        x.Ext.setDebug(true);
         setContentView(R.layout.activity_main);
         initView();
         initData();
@@ -89,21 +100,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
     private void queryCard(String name,String num){
-        ThreadPoolUtils.execute(new HttpGetThread(handler,
-                "http://www.zyloushi.com/extended/recard.php?m=Index&a=CheckCard&uname=" + name + "&cardnum=" + num));
-    }
-    private Handler handler=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 404) {
-                progress.setVisibility(View.GONE);
-                Toast.makeText(getBaseContext(), "找不到地址", Toast.LENGTH_SHORT).show();
-            } else if (msg.what == 100) {
-                progress.setVisibility(View.GONE);
-                Toast.makeText(getBaseContext(), "传输失败,请检查网络链接",Toast.LENGTH_SHORT).show();
-            } else if (msg.what == 200) {
-                String result = (String) msg.obj;
+        RequestParams params=new RequestParams(url+"&uname=" + name + "&cardnum=" + num);
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
                 try {
                     JSONObject datas = new JSONObject(result).getJSONObject("cardlists");
                     if ("1".equals(datas.getString("cardstatus"))){
@@ -138,11 +138,33 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                progress.setVisibility(View.GONE);
             }
-        }
-    };
 
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ConnectivityManager connectivityManager = (ConnectivityManager)getBaseContext().getSystemService(CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+                if(networkInfo == null || !networkInfo.isAvailable())
+                {
+                    Toast.makeText(getBaseContext(),"请保持网络畅通!",Toast.LENGTH_SHORT).show();
+                }
+                else
+                {
+                    Toast.makeText(getBaseContext(),"地址错误!",Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+
+            }
+
+            @Override
+            public void onFinished() {
+               progress.setVisibility(View.GONE);
+            }
+        });
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
